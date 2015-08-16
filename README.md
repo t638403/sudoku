@@ -7,3 +7,6 @@ Or, if you have `pkg-config` installed, run this command:
     
     gcc $(pkg-config --cflags --libs glib-2.0) -o sudoku sudoku.c
    
+   
+# Todo
+* Create commandline options to solve and generate with different configs 
