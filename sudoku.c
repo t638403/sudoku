@@ -124,29 +124,7 @@ char s_solve_sudoku(char* sudoku, int* max, GPtrArray* solutions) {
     }
     return 0;
 }
-/*
-char s_solve_sudoku(char* sudoku) {
-    char sudoku_is_valid = s_check_sudoku(sudoku);
-    if(sudoku_is_valid) {
-        return 1;
-    }
-    char i = s_find_first_zero_index(sudoku);
-    char found_first_zero_index = (i + 1);
-    if(found_first_zero_index) {
-        GSList* possibs = s_get_cell_possibs(sudoku, i);
-        int length = g_slist_length(possibs);
-        while(length>0) {
-            sudoku[i] = (char)GPOINTER_TO_INT(g_slist_nth_data(possibs, g_random_int_range(0, length)));
-            possibs = g_slist_remove(possibs, GINT_TO_POINTER(sudoku[i]));
-            length = g_slist_length(possibs);
-            char found = s_solve_sudoku(sudoku);
-            if(found) {return 1;}
-        }
-        sudoku[i] = 0;
-    }
-    return 0;
-}
-*/
+
 GSList* s_get_cell_possibs(char* sudoku, char i) {
     GSList* possibs = NULL; 
     for(char i=1;i<10;i++) {
