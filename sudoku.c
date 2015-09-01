@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <glib.h>
 
 void s_print_region(char *region);
@@ -20,32 +21,61 @@ char s_eq_sudoku(char* s1, char* s2);
 char* s_get_row_values(char *sudoku, char y);
 char* s_get_col_values(char *sudoku, char x);
 char* s_get_block_values(char *sudoku, char b);
+char* s_get_nrc_block_values(char *sudoku, char b);
 
 char s_divfloor(char n, char d);
 char s_get_row_index(char i);
 char s_get_col_index(char i);
 char s_get_block_index(char i);
+char s_get_nrc_block_index(char i);
 
 GSList* s_get_cell_possibs(char* sudoku, char i);
 
-char main() {
+static int puzzleType = 0;
+static int occupied = 0;
+char main(int argc, char *argv[]) {
+
+    int nrOfPuzzles = 1;
+    if( argc == 2 ) {
+        if (sscanf (argv[1], "%i", &nrOfPuzzles)!=1) { printf ("error - not an integer"); }
+    } else  if( argc == 3) {
+        if (sscanf (argv[1], "%i", &nrOfPuzzles)!=1) { printf ("error - not an integer"); }
+        if(strcmp(argv[2], "nrc") == 0) {puzzleType=1;}
+    }
+
+    for(int i=0;i<nrOfPuzzles;i++) {
+        char* solution = s_create_solution();
+        s_print_sudoku(solution);
+        printf("\n");
+
+        char* sudoku = s_create_sudoku_from_solution(solution);
+        s_print_sudoku(sudoku);
+        printf("Bezetting: %d\n", occupied);
+
+//        int max = 8;
+//        GPtrArray* solutions = g_ptr_array_new();
+//        s_solve_sudoku(sudoku, &max, solutions);
+//        printf("\n");
+//        s_print_sudoku(g_ptr_array_index(solutions, 0));
+//        printf("Solutions: %d\n", solutions->len);
+    }
     
-    char* solution = s_create_solution();
-    s_print_sudoku(solution);
-    
-    char* sudoku = s_create_sudoku_from_solution(solution);
-    printf("\n");
-    s_print_sudoku(sudoku);
-    
-    int max = 8;
-    GPtrArray* solutions = g_ptr_array_new();
-    s_solve_sudoku(sudoku, &max, solutions);
-    printf("\n");
-    s_print_sudoku(g_ptr_array_index(solutions, 0));
-    printf("Solutions: %d\n", solutions->len);
+
     
     return 0;
 }
+
+//    char sudoku[81] = {
+//        1,9,0,6,0,0,0,2,3,
+//        0,3,6,7,0,0,1,0,0,
+//        0,0,0,1,0,0,0,0,5,
+//        0,0,0,0,0,6,0,0,0,
+//        0,0,4,8,0,0,0,9,0,
+//        0,1,0,0,0,0,0,8,4,
+//        0,0,0,0,0,8,4,0,0,
+//        6,2,0,0,3,0,0,0,0,
+//        9,0,3,0,0,0,2,0,0,
+//    };
 
 char* s_create_solution() {
     char* empty_sudoku = calloc(81, sizeof(char));
@@ -87,6 +117,7 @@ char* s_create_sudoku_from_solution(char* solution) {
             int validIndex = GPOINTER_TO_INT(g_slist_nth_data(valid_indexes, i));
             sudoku[validIndex] = 0;
         }
+        occupied = 81 - g_slist_length(valid_indexes);
     }
     return sudoku;
 }
@@ -148,6 +179,14 @@ GSList* s_get_cell_possibs(char* sudoku, char i) {
         possibs = g_slist_remove(possibs, GINT_TO_POINTER(block_values[i]));
     }
     free(block_values);
+
+    if(puzzleType == 1 && s_get_nrc_block_index(i) > -1) {
+        char* nrc_block_values = s_get_nrc_block_values(sudoku, s_get_nrc_block_index(i));
+        for(char i=0;i<9;i++) {
+            possibs = g_slist_remove(possibs, GINT_TO_POINTER(nrc_block_values[i]));
+        }
+        free(nrc_block_values);
+    }
     return possibs;
 }
 
@@ -183,6 +222,20 @@ char* s_get_block_values(char *sudoku, char b) {
     return block;
 }
 
+char* s_get_nrc_block_values(char *sudoku, char b) {
+    char blocks[4][9] = {
+        {10, 11, 12, 19, 20, 21, 28, 29, 30},
+        {14, 15, 16, 23, 24, 25, 32, 33, 34},
+        {46, 47, 48, 55, 56, 57, 64, 65, 66},
+        {50, 51, 52, 59, 60, 61, 68, 69, 70}
+    };
+    char* block = calloc(9, sizeof(char));
+    for(char i=0;i<9;i++) {
+        block[i] = sudoku[blocks[b][i]];
+    }
+    return block;
+}
+
 char s_check_region(char* region) {
     char found[9] = {0,0,0,0,0,0,0,0,0};
     for(char i=0;i<9;i++) {
@@ -214,6 +267,15 @@ char s_check_sudoku(char *sudoku) {
         if(cb == 0) {
             free(block);
             return 0;
+        }
+        if(puzzleType == 1 && i < 4) {
+            char* nrc_block = s_get_nrc_block_values(sudoku, i);
+            char cb = s_check_region(nrc_block);
+            if(cb == 0) {
+                free(nrc_block);
+                return 0;
+            }
+            free(nrc_block);
         }
         free(row);
         free(col);
@@ -252,6 +314,23 @@ char s_get_block_index(char i) {
     return bi; 
 }
 
+char s_get_nrc_block_index(char i) {
+    char blocks[4][9] = {
+        {10, 11, 12, 19, 20, 21, 28, 29, 30},
+        {14, 15, 16, 23, 24, 25, 32, 33, 34},
+        {46, 47, 48, 55, 56, 57, 64, 65, 66},
+        {50, 51, 52, 59, 60, 61, 68, 69, 70}
+    };
+
+    for(char j=0;j<4;j++) {
+        for(char k=0;k<9;k++) {
+            if(i == blocks[j][k]) {
+                return j;
+            }
+        }
+    }
+    return -1;
+}
 
 char* s_dupl_sudoku(char* sudoku) {
     char* dupl = calloc(81, sizeof(char));
@@ -269,4 +348,3 @@ char s_eq_sudoku(char* s1, char* s2) {
     }
     return 1;
 }
-
