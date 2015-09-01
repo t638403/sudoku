@@ -8,7 +8,7 @@ Or, if you have `pkg-config` installed, run this command:
     gcc $(pkg-config --cflags --libs glib-2.0) -o sudoku sudoku.c
    
 ## Usage
-I have impleneted two kinds of sudokus
+I have implemented two kinds of sudokus
 
 1. The normal sudoku
 2. The [hypersudoku (nrc)](https://en.wikipedia.org/wiki/Sudoku#Hypersudoku)
