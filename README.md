@@ -15,7 +15,7 @@ I have impleneted two kinds of sudokus
 
 To generate 1 normal sudoku
 
-    $ sudoku
+    $ ./sudoku
     
 Result
 
@@ -42,11 +42,11 @@ Result
     
 To generate 10 normal sudokus
 
-    $ sudoku 10
+    $ ./sudoku 10
     
 To generate 10 hypersudokus
 
-    $ sudoku 10 nrc
+    $ ./sudoku 10 nrc
     
 ## Implementation
 Searches recursively for a solution and after that it removes cells one at a time until the soduoko isn't solvable
