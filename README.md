@@ -44,6 +44,10 @@ To generate 10 normal sudokus
 
     $ ./sudoku 10
     
+To generate 1 hypersudokus
+
+    $ ./sudoku nrc
+
 To generate 10 hypersudokus
 
     $ ./sudoku 10 nrc
