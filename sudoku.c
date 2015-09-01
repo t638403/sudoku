@@ -37,10 +37,21 @@ char main(int argc, char *argv[]) {
 
     int nrOfPuzzles = 1;
     if( argc == 2 ) {
-        if (sscanf (argv[1], "%i", &nrOfPuzzles)!=1) { printf ("error - not an integer"); }
+        if (sscanf (argv[1], "%i", &nrOfPuzzles)!=1) {
+            if(strcmp(argv[1], "nrc") == 0) {
+                puzzleType=1;
+            }
+            else {
+                printf ("error - not an integer");
+            }
+        }
     } else  if( argc == 3) {
-        if (sscanf (argv[1], "%i", &nrOfPuzzles)!=1) { printf ("error - not an integer"); }
-        if(strcmp(argv[2], "nrc") == 0) {puzzleType=1;}
+        if (sscanf (argv[1], "%i", &nrOfPuzzles)!=1) {
+            printf ("error - not an integer");
+        }
+        if(strcmp(argv[2], "nrc") == 0) {
+            puzzleType=1;
+        }
     }
 
     for(int i=0;i<nrOfPuzzles;i++) {
