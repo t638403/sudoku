@@ -50,7 +50,7 @@ char main(int argc, char *argv[]) {
 
         char* sudoku = s_create_sudoku_from_solution(solution);
         s_print_sudoku(sudoku);
-        printf("Bezetting: %d\n", occupied);
+        printf("Occupied cells: %d\n", occupied);
 
 //        int max = 8;
 //        GPtrArray* solutions = g_ptr_array_new();
