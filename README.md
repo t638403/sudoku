@@ -1,12 +1,8 @@
 # A brute force sudoku generator
-First install `glib 2.0` and `gcc` and run following command:
+First install `gcc` or `clang` and run following command:
 
-    gcc -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -lglib-2.0 -o sudoku sudoku.c
-    
-Or, if you have `pkg-config` installed, run this command:
-    
-    gcc $(pkg-config --cflags --libs glib-2.0) -o sudoku sudoku.c
-   
+    cc -O2 -o sudoku sudoku.c
+
 ## Usage
 I have implemented two kinds of sudokus
 
@@ -16,7 +12,7 @@ I have implemented two kinds of sudokus
 To generate 1 normal sudoku
 
     $ ./sudoku
-    
+
 Result
 
     4 6 5 3 9 8 1 2 7
@@ -28,7 +24,7 @@ Result
     7 3 4 6 2 9 8 5 1
     9 5 2 7 8 1 6 3 4
     8 1 6 5 4 3 2 7 9
-    
+
     4 0 0 0 0 8 1 2 0
     0 0 0 0 6 0 0 0 0
     3 2 0 0 0 0 0 0 0
@@ -39,11 +35,11 @@ Result
     0 0 0 7 0 0 0 3 0
     8 0 6 0 4 3 0 0 9
     Occupied cells: 22
-    
+
 To generate 10 normal sudokus
 
     $ ./sudoku 10
-    
+
 To generate 1 hypersudokus
 
     $ ./sudoku nrc
@@ -51,7 +47,7 @@ To generate 1 hypersudokus
 To generate 10 hypersudokus
 
     $ ./sudoku 10 nrc
-    
+
 ## Implementation
 Searches recursively for a solution and after that it removes cells one at a time until the soduoko isn't solvable
-anymore. Solvable means no more than one solution exists. 
+anymore. Solvable means no more than one solution exists.
