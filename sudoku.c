@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #define SUDOKU_SIZE 81
 
@@ -37,7 +38,7 @@ static int puzzleType = 0;
 static int occupied = 0;
 int main(int argc, char *argv[]) {
 
-    srandom(time(NULL));
+    srandom(time(NULL) * getpid());
     int nrOfPuzzles = 1;
     if( argc == 2 ) {
         if (sscanf (argv[1], "%i", &nrOfPuzzles)!=1) {
@@ -57,41 +58,20 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    for(int i=0;i<nrOfPuzzles;i++) {
+    for(int i=0;(i<nrOfPuzzles||nrOfPuzzles==-1);i++) {
         char* solution = s_create_solution();
         s_print_sudoku(solution);
-        printf("\n");
+        printf(":");
 
         char* sudoku = s_create_sudoku_from_solution(solution);
         s_print_sudoku(sudoku);
-        printf("Occupied cells: %d\n", occupied);
+        printf("\n");
         free(solution);
         free(sudoku);
-
-//        int max = 8;
-//        GPtrArray* solutions = g_ptr_array_new();
-//        s_solve_sudoku(sudoku, &max, solutions);
-//        printf("\n");
-//        s_print_sudoku(g_ptr_array_index(solutions, 0));
-//        printf("Solutions: %d\n", solutions->len);
     }
-
-
 
     return 0;
 }
-
-//    char sudoku[81] = {
-//        1,9,0,6,0,0,0,2,3,
-//        0,3,6,7,0,0,1,0,0,
-//        0,0,0,1,0,0,0,0,5,
-//        0,0,0,0,0,6,0,0,0,
-//        0,0,4,8,0,0,0,9,0,
-//        0,1,0,0,0,0,0,8,4,
-//        0,0,0,0,0,8,4,0,0,
-//        6,2,0,0,3,0,0,0,0,
-//        9,0,3,0,0,0,2,0,0,
-//    };
 
 static char* s_create_solution() {
     char empty_sudoku[SUDOKU_SIZE];
@@ -299,10 +279,14 @@ static char s_check_sudoku(char *sudoku) {
 }
 
 static void s_print_region(char *region) {
-    for(char i=0;i<8;i++) {
-        printf("%d ", region[i]);
+    for(char i=0;i<9;i++) {
+        bool isEmptyField = region[i] == 0;
+        if(!isEmptyField) {
+            printf("%d", region[i]);
+        } else {
+            printf(" ");
+        }
     }
-    printf("%d\n", region[8]);
 }
 
 static void s_print_sudoku(char *sudoku) {

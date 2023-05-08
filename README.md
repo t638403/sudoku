@@ -15,26 +15,7 @@ To generate 1 normal sudoku
 
 Result
 
-    4 6 5 3 9 8 1 2 7
-    1 9 8 2 6 7 5 4 3
-    3 2 7 4 1 5 9 6 8
-    2 8 3 9 7 6 4 1 5
-    5 4 1 8 3 2 7 9 6
-    6 7 9 1 5 4 3 8 2
-    7 3 4 6 2 9 8 5 1
-    9 5 2 7 8 1 6 3 4
-    8 1 6 5 4 3 2 7 9
-
-    4 0 0 0 0 8 1 2 0
-    0 0 0 0 6 0 0 0 0
-    3 2 0 0 0 0 0 0 0
-    0 0 0 9 0 0 0 0 5
-    5 0 0 0 0 2 0 0 6
-    0 0 9 1 0 0 0 0 0
-    0 3 0 0 0 0 0 0 0
-    0 0 0 7 0 0 0 3 0
-    8 0 6 0 4 3 0 0 9
-    Occupied cells: 22
+    147295863659183247238746195725418936964352718381679524472531689813967452596824371:          591    72  7 6       1 936 6     1  8    5   7  3 6  81 96 4  5   24   
 
 To generate 10 normal sudokus
 
@@ -47,6 +28,10 @@ To generate 1 hypersudokus
 To generate 10 hypersudokus
 
     $ ./sudoku 10 nrc
+
+To generate an endless stream
+
+    $ ./sudoku -1
 
 ## Implementation
 Searches recursively for a solution and after that it removes cells one at a time until the soduoko isn't solvable
