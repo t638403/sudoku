@@ -6,6 +6,10 @@
 
 #define SUDOKU_SIZE 81
 
+typedef int bool;
+#define TRUE  1
+#define FALSE 0
+
 static void s_print_region(char *region);
 static void s_print_sudoku(char *sudoku);
 
@@ -280,7 +284,8 @@ static char s_check_sudoku(char *sudoku) {
 
 static void s_print_region(char *region) {
     for(char i=0;i<9;i++) {
-        bool isEmptyField = region[i] == 0;
+        bool isEmptyField;
+        isEmptyField=(region[i] == 0);
         if(!isEmptyField) {
             printf("%d", region[i]);
         } else {
